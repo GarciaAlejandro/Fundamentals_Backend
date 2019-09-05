@@ -1,7 +1,7 @@
 # tests/Feature/HelloWorldTest.php
 <?php
 
-namespace Tests\Feature;
+namespace tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
