@@ -19,5 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/greeting', function (Request $request){
-    return 'Hello World! AG';
+    return 'Hello World! AG12';
 });
