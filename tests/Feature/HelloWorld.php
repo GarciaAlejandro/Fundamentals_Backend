@@ -1,4 +1,3 @@
-# tests/Feature/HelloWorldTest.php
 <?php
 
 namespace Tests\Feature;

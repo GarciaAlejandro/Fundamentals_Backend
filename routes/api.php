@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+// routes/api.php
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,3 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/greeting', function (Request $request){
     return 'Hello World! AG12';
 });
+
+Route::post('products',"ProductController@store");
