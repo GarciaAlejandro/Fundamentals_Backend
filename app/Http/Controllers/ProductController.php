@@ -56,7 +56,7 @@ class ProductController extends Controller
     public function show($id)
     {
         // Se busca el producto en tabla 
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
 
         // Se retorna el producto solicitado, con el status 200 (OK)
         return response()->json($product,200);
@@ -104,6 +104,6 @@ class ProductController extends Controller
         //
         $productToDestroy = Product::findOrFail($id);
         $productToDestroy->delete();
-        return response(null,200);
+        return response(null,204);
     }
 }
