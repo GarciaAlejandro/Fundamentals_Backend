@@ -22,4 +22,21 @@ Route::get('/greeting', function (Request $request){
     return 'Hello World! AG12';
 });
 
-Route::post('products',"ProductController@store");
+// TAREA 
+// NOTA * PUERTO LOCAL 192.168.100.26
+
+// CREATE product
+Route::POST('products',"ProductController@store");
+
+// LIST ALL productos
+Route::GET('products', "ProductController@index");
+
+// SHOW Product 
+Route::GET('products/{id}', "ProductController@show");
+// Update Product 
+Route::PUT('products/{id}', "ProductController@update");
+
+// DELETE Product
+Route::DELETE('products/{id}',"ProductController@destroy");
+
+

@@ -14,7 +14,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        // Se obtienen los productos de la base de datos
+        $products = Product::all();
+        // Se dan los productos en un JSON con el código 200
+        return response()->json($products, 200);
+
     }
 
     /**
@@ -49,9 +53,14 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        // Se busca el producto en tabla 
+        $product = Product::findOrFail($id);
+
+        // Se retorna el producto solicitado, con el status 200 (OK)
+        return response()->json($product,200);
+
     }
 
     /**
@@ -60,9 +69,10 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+
+
     }
 
     /**
@@ -72,9 +82,15 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
         //
+        // Se busca el producto en la tabla
+        $product = Product::find($id);
+        // Se guarda el producto actualizado
+        $product->update($request->all());
+        // Se retorna el producto modificado, con el status 200 (OK)
+        return response()->json($product,200);
     }
 
     /**
@@ -83,8 +99,11 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
+        $productToDestroy = Product::findOrFail($id);
+        $productToDestroy->delete();
+        return response(null,200);
     }
 }
