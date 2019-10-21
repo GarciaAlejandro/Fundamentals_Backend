@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProductRequest;
 use \Illuminate\Validation\Validator;
+use App\Http\Resources\Product as ProductResource;
+use App\Http\Resources\ProductCollection;
 
 class ProductController extends Controller
 {
@@ -17,11 +19,13 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // LISTAR 
         // Se obtienen los productos de la base de datos
-        $products = Product::all();
+        // $products = Product::all();
         // Se dan los productos en un JSON con el código 200
-        return response()->json($products, 200);
-         
+        // return response()->json($products, 200);
+        // return new ProductCollection($products->toArray());
+        return ProductResource::collection(Product::all());
     }
 
     /**
@@ -42,13 +46,16 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        // Create a new product
-        $product = Product::create($request->all());
+        // Get data from JSON
+        $data = $request['data']['attributes'];
 
-        // Return a response with a product json
-        // representation and a 201 status code   
-      
-        return response()->json($product,201);
+        // Create a new product
+        $product = Product::create($data);
+
+        // Save product in the DB
+        $product->save();
+        //Return the JSON with specific Structure
+        return new ProductResource($product);
     } 
 
     /**
@@ -62,8 +69,8 @@ class ProductController extends Controller
         // Se busca el producto en tabla 
         $product = Product::findOrFail($id);
 
-        // Se retorna el producto solicitado, con el status 200 (OK)
-        return response()->json($product,200);
+        // Se retorna el producto solicitado, con la representación adecuada
+        return new ProductResource($product);
     
     }
 
@@ -88,11 +95,17 @@ class ProductController extends Controller
     {
         // Se busca el producto en la tabla
         $product = Product::findOrFail($id);
+        // Se obtienen los datos del JSON anidado
+        $data = $request['data']['attributes'];
         // Se guarda el producto actualizado
-        $product->update($request->all());
+        $product->update($data);
         
         // Se retorna el producto modificado, con el status 200 (OK)
-        return response()->json($product,200);
+        // return response()->json($product,200);
+
+        // se retorna el producto modificado, con la representación anidada
+        return new ProductResource($product);
+
     }
 
     /**

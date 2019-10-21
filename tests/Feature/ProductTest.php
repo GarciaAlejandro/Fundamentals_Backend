@@ -28,10 +28,17 @@ class ProductTest extends TestCase
     {
         // GIVEN
         // El Cliente Tiene tiene una representación de un producto que quiere agregar a la aplicación
+        // Request Body
         $productData = [
-            'name' => 'Super Product',
-            'price' => '130'
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Super Product',
+                    'price' => '130'
+                ]
+            ]
         ];
+
 
         // When
         // Call to the EndPoint to create a product
@@ -41,11 +48,19 @@ class ProductTest extends TestCase
         // Assert it sends the correct HTTP Status
         $response->assertStatus(201);
 
-        // Assert the response has the correct structure
-        $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+        // Assert the response has the correct structure and the correct values
+        $response->assertJson([
+        'data' => [
+            'type' => 'products',
+            'id' => '1',
+            'attributes' => [
+                'name' => 'Super Product',
+                'price' => '130'
+            ],
+            'links' => [
+                "self" => 'http://dummy-app.test/api/products/1',
+            ]
+        ]
         ]);
 
         // Assert the product was created
@@ -61,7 +76,7 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas(
             'products',
             [
-                'id' => $body['id'],
+                'id' => '1',
                 'name' => 'Super Product',
                 'price' => '130'
             ]
@@ -75,11 +90,16 @@ class ProductTest extends TestCase
     public function test_client_dont_send_name(){
         // GIVEN
         // El cliente no envía el atributo "name" en el cuerpo de la solicitud     
-        $productData = [
-            'name' => '',
-            'price' => '10'
+       // Request Body
+       $productData = [
+        'data' => [
+            'type' => 'products',
+            'attributes' => [
+                'name' => '',
+                'price' => '130'
+                ]
+            ]
         ];
-
 
          // When
          $response = $this->json('POST', '/api/products', $productData);
@@ -103,9 +123,15 @@ class ProductTest extends TestCase
     public function test_client_dont_send_price(){
          // GIVEN
         // El cliente no envía el atributo "PRICE" en el cuerpo de la solicitud     
-        $productData = [
-            'name' => 'Botella',
-            'price' => ''
+       // Request Body
+       $productData = [
+        'data' => [
+            'type' => 'products',
+            'attributes' => [
+                'name' => 'Product',
+                'price' => ''
+                ]
+            ]
         ];
 
         // When
@@ -131,9 +157,14 @@ class ProductTest extends TestCase
         // GIVEN
         // El cliente envía la representación de un producto donde el atributo "price" NO es un número   
         $productData = [
-            'name' => 'Botella',
-            'price' => 'NoNumero'
-        ];
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Product',
+                    'price' => 'NotNumber'
+                    ]
+                ]
+            ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
@@ -157,9 +188,14 @@ class ProductTest extends TestCase
         // GIVEN
         // El cliente envía la representación de un producto donde el atributo "price" tiene un valor de "-20"   
         $productData = [
-            'name' => 'Botella',
-            'price' => '-20'
-        ];
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Product',
+                    'price' => '-20'
+                    ]
+                ]
+            ];
 
         // When
         $response = $this->json('POST', '/api/products', $productData);
@@ -180,19 +216,24 @@ class ProductTest extends TestCase
      *      UPDATE-1
      */
     public function test_client_can_update_a_product(){
-        
+
         // GIVEN
         // A product to edit with ID (Factory)
         $productData = factory(Product::class)->create([
-            "name" => "Text",
-            "price" => "10"
+            'name' => 'Text',
+            'price' => '10'
         ]);
 
         // The body of the request with the values edited
         $productDataUpdate = [
-            "name" => "Text Edited",
-            "price" => "20"
-        ];
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Text Edited',
+                    'price' => '20'
+                    ]
+                ]
+            ];
         // WHEN
         // I send a request to update the product
         $response = $this->json('PUT',"api/products/".$productData->id, $productDataUpdate);
@@ -206,21 +247,42 @@ class ProductTest extends TestCase
     
         // Assert the response has the correct structure
         $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ],
+                'links'=> [
+                    'self'
+                ]
+            ]
         ]);
 
         // Assert the product was edited
         // with the correct data
     
         $response->assertJson([
-            'name' => 'Text Edited',
-            'price' => '20'
+            'data' => [
+                'type' => 'products',
+                'id' => $productData->id,
+                'attributes' => [
+                    'name' => 'Text Edited',
+                    'price' => '20'
+                ],
+                'links' =>[
+                    'self' => 'http://dummy-app.test/api/products/'.$productData->id
+                ]
+            ]
         ]);
         
         // Assert the product Edited there is in the DB
-         $this->assertDatabaseHas('products', $productDataUpdate);
+        $productDataUpdateDB = [
+            'name' => 'Text Edited',
+            'price' => '20'
+        ];
+         $this->assertDatabaseHas('products', $productDataUpdateDB);
     }
 
     /** 
@@ -236,9 +298,14 @@ class ProductTest extends TestCase
         // GIVEN
         // El cliente envía la representación de un producto donde el atributo "PRICE" No es un número válido
         $productDataUpdate = [
-            "name" => "Text Edited",
-            "price" => "NotNumber"
-        ];
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Text Edited',
+                    'price' => 'NotNumber'
+                    ]
+                ]
+            ];
 
         // WHEN
         // I send a request to update the product
@@ -270,9 +337,14 @@ class ProductTest extends TestCase
         // GIVEN
         // El cliente envía la representación de un producto donde el atributo "PRICE" No es un número válido
         $productDataUpdate = [
-            "name" => "Text Edited",
-            "price" => "-20"
-        ];
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Text Edited',
+                    'price' => '-20'
+                    ]
+                ]
+            ];
 
         // WHEN
         // I send a request to update the product
@@ -303,10 +375,15 @@ class ProductTest extends TestCase
         ]);  
 
         // Representación del producto a editar 
-        $productDataUpdate =[
-            "name" => "Text Edited",
-            "price" => "10",
-        ];
+        $productDataUpdate = [
+            'data' => [
+                'type' => 'products',
+                'attributes' => [
+                    'name' => 'Text Edited',
+                    'price' => '10'
+                    ]
+                ]
+            ];
 
         // WHEN
         // I send a request to update the product
@@ -346,17 +423,34 @@ class ProductTest extends TestCase
         // A product representation is returned
         // Assert the response has the correct structure
         $response->assertJsonStructure([
-            'id',
-            'name',
-            'price'
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'price'
+                ],
+                'links'=> [
+                    'self'
+                ]
+            ]
         ]);
 
         // Assert the product was showed
         // with the correct data of Factory
 
         $response->assertJson([
-            'name' => $productData->name,
-            'price' => $productData->price,
+            'data' => [
+                'type' => 'products',
+                'id' => $productData->id,
+                'attributes' => [
+                    'name' => $productData->name,
+                    'price' => $productData->price
+                ],
+                'links' =>[
+                    'self' => 'http://dummy-app.test/api/products/'.$productData->id
+                ]
+            ]
         ]);
 
     }
@@ -457,13 +551,24 @@ class ProductTest extends TestCase
 
         // DESPLEGAR DATOS 
         //  A list with all the products representations are returned
+
         $response->assertJsonStructure([
-              '*' => [
-                'id',
-                'name',
-                'price',
-              ]
-          ]);
+            'data' => [
+                '*' => [
+                    'type',
+                    'id',
+                    'attributes' => [
+                        'name',
+                        'price'
+                    ],
+                    'links' => [
+                        'self'
+                    ]
+                    
+                ]
+            ]
+        ]);
+
     }
     /**
      *      LIST-2

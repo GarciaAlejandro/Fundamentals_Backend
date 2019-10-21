@@ -39,4 +39,5 @@ Route::PUT('products/{id}', "ProductController@update");
 // DELETE Product
 Route::DELETE('products/{id}',"ProductController@destroy");
 
+Route::apiResource('product',"ProductController");
 
