@@ -106,6 +106,7 @@ class ProductController extends Controller
         // se retorna el producto modificado, con la representación anidada
         return new ProductResource($product);
 
+
     }
 
     /**
