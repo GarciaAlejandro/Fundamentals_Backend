@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ProductRequest extends FormRequest
 {
@@ -16,6 +18,16 @@ class ProductRequest extends FormRequest
         return true;
     }
 
+    protected function failedValidation(Validator $validator)
+    {
+
+    throw new HttpResponseException(response()->json(   [
+        "errors" => [[
+            "code" => "Error-1",
+            "title" => "Unprocessable Entity",
+        ]]
+     ] ,422)); 
+    }
 
 
     /**
@@ -29,7 +41,7 @@ class ProductRequest extends FormRequest
             //
           
             'data.attributes.name' => 'required',
-            'data.attributes.price' => 'required | numeric | gte:0',
+            'data.attributes.price' => 'required | numeric | gte:1',
         ];
     }
 }

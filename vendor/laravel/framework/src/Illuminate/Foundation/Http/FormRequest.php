@@ -129,19 +129,9 @@ class FormRequest extends Request implements ValidatesWhenResolved
 
     protected function failedValidation(Validator $validator)
     {
-        //throw (new ValidationException($validator))
-        //            ->errorBag($this->errorBag)
-        //           ->redirectTo($this->getRedirectUrl());
-     //   throw new MyValidationException($validator);
-    // throw new HttpResponseException(response()->json($validator->errors()->all(), 422)); 
-
-    // "detail" => $validator->errors()->all()
-    throw new HttpResponseException(response()->json(   [
-        "errors" => [[
-            "code" => "Error-1",
-            "title" => "Unprocessable Entity",
-        ]]
-     ] ,422)); 
+        throw (new ValidationException($validator))
+                   ->errorBag($this->errorBag)
+                  ->redirectTo($this->getRedirectUrl());
     }
 
     /**
