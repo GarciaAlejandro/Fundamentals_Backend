@@ -14,6 +14,8 @@ class Product extends JsonResource
      */
     public function toArray($request)
     {
+
+
         // return parent::toArray($request);
         return[
             'type' => "products",
@@ -23,7 +25,7 @@ class Product extends JsonResource
             'price' => $this->price,
             ],
         'links' =>[
-            'self' => "http://dummy-app.test/api/products/".$this->id
+            'self' => "http://127.0.0.1:8000/api/products/".$this->id
         ],
             
         ];
