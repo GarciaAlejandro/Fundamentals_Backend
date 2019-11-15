@@ -47,7 +47,7 @@ class ProductTest extends TestCase
         // Then
         // Assert it sends the correct HTTP Status
         $response->assertStatus(201);
-
+        
         // Assert the response has the correct structure and the correct values
         $response->assertJson([
         'data' => [
@@ -58,7 +58,7 @@ class ProductTest extends TestCase
                 'price' => '130'
             ],
             'links' => [
-                "self" => 'http://dummy-app.test/api/products/1',
+                "self" => 'http://127.0.0.1:8000/api/products/1',
             ]
         ]
         ]);
@@ -272,7 +272,7 @@ class ProductTest extends TestCase
                     'price' => '20'
                 ],
                 'links' =>[
-                    'self' => 'http://dummy-app.test/api/products/'.$productData->id
+                    'self' => 'http://127.0.0.1:8000/api/products/'.$productData->id
                 ]
             ]
         ]);
@@ -448,7 +448,7 @@ class ProductTest extends TestCase
                     'price' => $productData->price
                 ],
                 'links' =>[
-                    'self' => 'http://dummy-app.test/api/products/'.$productData->id
+                    'self' => 'http://127.0.0.1:8000/api/products/'.$productData->id
                 ]
             ]
         ]);
