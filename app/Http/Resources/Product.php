@@ -15,7 +15,7 @@ class Product extends JsonResource
     public function toArray($request)
     {
 
-
+       // $URL = env("APP_URL");
         // return parent::toArray($request);
         return[
             'type' => "products",
