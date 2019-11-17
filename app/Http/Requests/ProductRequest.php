@@ -41,7 +41,7 @@ class ProductRequest extends FormRequest
             //
           
             'data.attributes.name' => 'required',
-            'data.attributes.price' => 'required | numeric | gte:1',
+            'data.attributes.price' => 'required | numeric | gt:1',
         ];
     }
 }
