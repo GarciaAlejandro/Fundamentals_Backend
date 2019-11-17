@@ -192,7 +192,7 @@ class ProductTest extends TestCase
                 'type' => 'products',
                 'attributes' => [
                     'name' => 'Product',
-                    'price' => '0.5' // -20 
+                    'price' => '-20' // -20 
                     ]
                 ]
             ];
